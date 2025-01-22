@@ -1,0 +1,29 @@
+﻿@model BasketballForum.Models.Comment
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h4>Leave Comment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <input type="hidden" asp-for="DiscussionId" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                
+				<textarea asp-for="Content" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<a asp-action="Index" asp-controller="Discussions">Back to Discussions</a>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
