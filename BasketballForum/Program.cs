@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using BasketballForum.Data;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BasketballForumContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BasketballForumContext") ?? throw new InvalidOperationException("Connection string 'BasketballForumContext' not found.")));
