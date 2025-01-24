@@ -1,8 +1,42 @@
-﻿@{
+﻿@model IEnumerable<BasketballForum.Models.Discussion>
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-6">welcome to Discussions Board</h1>
+        @* <a asp-action="Create" class="btn btn-primary btn-lg">+ New Discussion</a> *@
+    </div>
+
+    <!-- Discussion Cards -->
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-6 col-md-12 mb-4">
+                <div class="card h-100 shadow-lg border-0">
+                    <div class="card-body">
+                        <!-- Title and Date -->
+                        <div>
+                            <h5 class="card-title text-primary fw-bold">
+								<a asp-action="Details" asp-controller="Discussions" asp-route-id="@item.DiscussionId">@item.Title</a>
+                            </h5>
+                            <small class="text-muted">Created on: @item.CreateDate.ToString("MMMM dd, yyyy")</small>
+                        </div>
+                        <!-- Thumbnail image -->
+                        @if (!string.IsNullOrEmpty(item.ImageFilename))
+                        {
+                            <img src="~/images/@item.ImageFilename" class="img-fluid rounded mt-2" alt="@item.Title" style="width: 200px; height: auto;" />
+                        }
+                        <!-- Content Preview -->
+                        <p class="card-text mt-2 text-secondary text-truncate" style="max-height: 3rem; overflow: hidden;">
+                            @item.Content
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+

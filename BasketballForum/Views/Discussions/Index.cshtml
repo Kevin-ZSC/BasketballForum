@@ -23,7 +23,11 @@
                             <h5 class="card-title text-primary fw-bold">@item.Title</h5>
                             <small class="text-muted">Created on: @item.CreateDate.ToString("MMMM dd, yyyy")</small>
                         </div>
-
+                        <!-- Thumbnail image -->
+                        @if (!string.IsNullOrEmpty(item.ImageFilename))
+						{
+                            <img src="~/images/@item.ImageFilename" class="img-fluid rounded mt-2" alt="@item.Title" style="width: 200px; height: auto;" />
+						}
                         <!-- Content Preview -->
                         <p class="card-text mt-2 text-secondary text-truncate" style="max-height: 3rem; overflow: hidden;">
                             @item.Content

@@ -4,40 +4,61 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Discussion</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Content)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Content)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageFilename)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageFilename)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-    </dl>
+<!-- Discussion Details -->
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">@Model.Title</h4>
+            <p class="text-white mt-2">Posted on: @Model.CreateDate.ToString("g")</p>
+        </div>
+        <div class="card-body">
+            <p>@Model.Content</p>
+            @if (!string.IsNullOrEmpty(Model.ImageFilename))
+            {
+                <img src="@Url.Content($"~/images/{Model.ImageFilename}")" alt="Discussion Image" class="img-fluid rounded mt-3" />
+            }
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Create" asp-controller="Comments" asp-route-DiscussionId="@Model?.DiscussionId">Add Comment</a> |
-    <a asp-action="Edit" asp-route-id="@Model?.DiscussionId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<!-- Comments Section -->
+<div class="container mb-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">
+            <h5 class="mb-0">Comments</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Comments != null && Model.Comments.Any())
+            {
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="mb-3">
+                        <div class="border rounded p-3">
+                            <p class="mb-1">@comment.Content</p>
+                            <small class="text-muted">Posted on @comment.CreateDate.ToString("g")</small>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">No comments yet. Be the first to add a comment!</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="container mb-4">
+    <div class="d-flex justify-content-between">
+        <a asp-action="Create" asp-controller="Comments" asp-route-DiscussionId="@Model?.DiscussionId" class="btn btn-primary">
+            <i class="bi bi-chat-dots"></i> Add Comment
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model?.DiscussionId" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
 </div>

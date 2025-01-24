@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using BasketballForum.Data;
 using BasketballForum.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,16 +7,22 @@ namespace BasketballForum.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly BasketballForumContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(BasketballForumContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var discussions = GetDiscussion();
+            return View(discussions);
+        }
+
+        public IEnumerable<Discussion> GetDiscussion()
+        {
+            return _context.Discussion.ToList();
         }
 
         public IActionResult Privacy()

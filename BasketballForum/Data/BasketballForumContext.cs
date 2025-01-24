@@ -16,5 +16,6 @@ namespace BasketballForum.Data
 
         public DbSet<BasketballForum.Models.Discussion> Discussion { get; set; } = default!;
         public DbSet<BasketballForum.Models.Comment> Comment { get; set; } = default!;
+
     }
 }
