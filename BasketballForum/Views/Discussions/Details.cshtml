@@ -12,17 +12,24 @@
             <p class="text-white mt-2">Posted on: @Model.CreateDate.ToString("g")</p>
         </div>
         <div class="card-body">
-            <p>@Model.Content</p>
+
             @if (!string.IsNullOrEmpty(Model.ImageFilename))
             {
                 <img src="@Url.Content($"~/images/{Model.ImageFilename}")" alt="Discussion Image" class="img-fluid rounded mt-3" />
             }
+            <p>@Model.Content</p>
         </div>
     </div>
 </div>
 
+
 <!-- Comments Section -->
 <div class="container mb-4">
+    <div>
+        <a asp-action="Create" asp-controller="Comments" asp-route-DiscussionId="@Model?.DiscussionId" class="btn btn-primary">
+            Add Comment
+        </a>
+    </div>
     <div class="card shadow-sm">
         <div class="card-header bg-secondary text-white">
             <h5 class="mb-0">Comments</h5>
@@ -50,15 +57,17 @@
 
 <!-- Action Buttons -->
 <div class="container mb-4">
-    <div class="d-flex justify-content-between">
-        <a asp-action="Create" asp-controller="Comments" asp-route-DiscussionId="@Model?.DiscussionId" class="btn btn-primary">
-            <i class="bi bi-chat-dots"></i> Add Comment
-        </a>
+    <div class="d-flex justify-content-end row-gap-2">
+       
         <a asp-action="Edit" asp-route-id="@Model?.DiscussionId" class="btn btn-warning">
-            <i class="bi bi-pencil"></i> Edit
+             Edit
         </a>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back to List
+        <form asp-action="Delete" asp-controller="Discussions" method="post" class="d-inline">
+            <input type="hidden" name="id" value="@Model?.DiscussionId" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
+             Back to Home
         </a>
     </div>
 </div>

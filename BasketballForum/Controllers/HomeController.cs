@@ -16,7 +16,7 @@ namespace BasketballForum.Controllers
 
         public IActionResult Index()
         {
-            var discussions = GetDiscussion();
+            var discussions = GetDiscussion().OrderByDescending(c => c.CreateDate).ToList();
             return View(discussions);
         }
 

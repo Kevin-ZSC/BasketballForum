@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasketballForum.Migrations
 {
     [DbContext(typeof(BasketballForumContext))]
-    [Migration("20250123170312_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250125143502_AddCommentCountToDiscussion")]
+    partial class AddCommentCountToDiscussion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,6 +58,9 @@ namespace BasketballForum.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DiscussionId"));
 
+                    b.Property<int>("CommentsCount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -66,7 +69,6 @@ namespace BasketballForum.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageFilename")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")

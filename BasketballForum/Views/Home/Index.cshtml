@@ -20,7 +20,7 @@
                         <!-- Title and Date -->
                         <div>
                             <h5 class="card-title text-primary fw-bold">
-								<a asp-action="Details" asp-controller="Discussions" asp-route-id="@item.DiscussionId">@item.Title</a>
+                                <a asp-action="Details" asp-controller="Discussions" asp-route-id="@item.DiscussionId" class="text-decoration-none">@item.Title</a>
                             </h5>
                             <small class="text-muted">Created on: @item.CreateDate.ToString("MMMM dd, yyyy")</small>
                         </div>
@@ -33,6 +33,9 @@
                         <p class="card-text mt-2 text-secondary text-truncate" style="max-height: 3rem; overflow: hidden;">
                             @item.Content
                         </p>
+                    </div>
+                    <div>
+                        <p>@item.CommentsCount Comments</p>
                     </div>
                 </div>
             </div>

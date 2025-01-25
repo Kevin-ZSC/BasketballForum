@@ -14,6 +14,15 @@
 
     <div class="mb-4">
         <h2>Comments</h2>
+        <div class="d-flex justify-content-between">
+            <a asp-action="Create" asp-controller="Comments" asp-route-DiscussionId="@Model?.DiscussionId" class="btn btn-primary">
+                <i class="bi bi-chat-right-text"></i> Add Comment
+            </a>
+            <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+
         @if (Model.Comments != null && Model.Comments.Any())
         {
             <ul class="list-group">
@@ -34,12 +43,5 @@
 
     <hr class="my-4" />
 
-    <div class="d-flex justify-content-between">
-        <a asp-action="Create" asp-controller="Comments" asp-route-DiscussionId="@Model?.DiscussionId" class="btn btn-primary">
-            <i class="bi bi-chat-right-text"></i> Add Comment
-        </a>
-        <a asp-action="Index" class="btn btn-secondary">
-            <i class="bi bi-arrow-left"></i> Back to List
-        </a>
-    </div>
+    
 </div>

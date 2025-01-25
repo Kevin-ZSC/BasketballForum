@@ -18,24 +18,29 @@ namespace BasketballForum.Controllers
 		{
 			_context = context;
 		}
-		// GET: Comments/Create
-		public IActionResult Create(int DiscussionId)
-		{
-			var discussion = _context.Discussion.FirstOrDefault(d => d.DiscussionId == DiscussionId);
+        // GET: Comments/Create
+        public IActionResult Create(int DiscussionId)
+        {
+            var discussion = _context.Discussion.FirstOrDefault(d => d.DiscussionId == DiscussionId);
 
-			if (discussion == null)
-			{
-				return NotFound();
-			}
-			ViewData["DiscussionId"] = DiscussionId;
+            if (discussion == null)
+            {
+                return NotFound();
+            }
 
-			return View();
-		}
+            var comment = new Comment
+            {
+                DiscussionId = DiscussionId
+            };
 
-		// POST: Comments/Create
-		// To protect from overposting attacks, enable the specific properties you want to bind to.
-		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-		[HttpPost]
+            return View(comment);
+        }
+
+
+        // POST: Comments/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create([Bind("CommentId,Content,CreateDate,DiscussionId")] Comment comment)
 		{
@@ -43,7 +48,13 @@ namespace BasketballForum.Controllers
 			{
 				comment.CreateDate = DateTime.Now;
 				_context.Add(comment);
-				await _context.SaveChangesAsync();
+                var discussion = await _context.Discussion.FindAsync(comment.DiscussionId);
+                if (discussion != null)
+                {
+                    discussion.CommentsCount += 1;
+                    _context.Discussion.Update(discussion);
+                }
+                await _context.SaveChangesAsync();
 				return RedirectToAction("GetDiscussion", "Discussions", new { id = comment.DiscussionId });
 			}
 			return View(comment);

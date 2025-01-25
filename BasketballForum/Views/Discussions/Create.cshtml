@@ -24,9 +24,10 @@
             </div>
             <div class="form-group">
                 <label for="ImageFile">Upload Image</label>
-                <input type="file" id="ImageFile" name="ImageFile" />
-                <span asp-validation-for="ImageFilename" class="text-danger"></span>
+                <input id="ImageFile" name="ImageFile" type="file" />
+                @* <span asp-validation-for="ImageFile" class="text-danger"></span> *@
             </div>
+
             <div class="form-group">
                 <label asp-for="CreateDate" class="control-label"></label>
                 <input asp-for="CreateDate" class="form-control" />
@@ -40,9 +41,8 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" asp-controller="Home" >Back to List</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+ @section Scripts { 
+     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
+ } 
