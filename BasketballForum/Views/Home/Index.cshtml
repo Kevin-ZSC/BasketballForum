@@ -1,45 +1,47 @@
 ﻿@model IEnumerable<BasketballForum.Models.Discussion>
 @{
     ViewData["Title"] = "Home Page";
+    var discussionCount = Model.Count(); 
 }
 
 <div class="container mt-5">
-    <!-- Header -->
+
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="display-6">welcome to Discussions Board</h1>
-        @* <a asp-action="Create" class="btn btn-primary btn-lg">+ New Discussion</a> *@
+        <h1 class="display-6">Welcome to Discussions Board</h1>
     </div>
 
     <!-- Discussion Cards -->
-    <div class="row">
+    <div class="row justify-content-center">
         @foreach (var item in Model)
         {
-            <div class="col-lg-6 col-md-12 mb-4">
-                <div class="card h-100 shadow-lg border-0">
-                    <div class="card-body">
-                        <!-- Title and Date -->
-                        <div>
-                            <h5 class="card-title text-primary fw-bold">
-                                <a asp-action="Details" asp-controller="Discussions" asp-route-id="@item.DiscussionId" class="text-decoration-none">@item.Title</a>
+            <div class="@(discussionCount == 1 ? "col-12 col-md-8 col-lg-6" : "col-lg-6 col-md-12") mb-4">
+                <div class="card h-100 shadow-lg border-0 @(discussionCount == 1 ? "p-4" : "")">
+                    <div class="card-body d-flex flex-column">
+                        
+                        <div class="mb-3">
+                            <h5 class="card-title text-primary fw-bold @(discussionCount == 1 ? "display-6" : "")">
+                                <a asp-action="GetDiscussion" asp-controller="Discussions" asp-route-id="@item.DiscussionId" class="text-decoration-none">@item.Title</a>
                             </h5>
                             <small class="text-muted">Created on: @item.CreateDate.ToString("MMMM dd, yyyy")</small>
                         </div>
-                        <!-- Thumbnail image -->
+
                         @if (!string.IsNullOrEmpty(item.ImageFilename))
                         {
-                            <img src="~/images/@item.ImageFilename" class="img-fluid rounded mt-2" alt="@item.Title" style="width: 200px; height: auto;" />
+                            <div class="d-flex justify-content-center mb-3">
+                                <img src="~/images/@item.ImageFilename" class="img-fluid rounded" alt="@item.Title" style="max-width: 100%; height: auto;" />
+                            </div>
                         }
-                        <!-- Content Preview -->
-                        <p class="card-text mt-2 text-secondary text-truncate" style="max-height: 3rem; overflow: hidden;">
+
+                        <p class="card-text text-secondary flex-grow-1" style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;">
                             @item.Content
                         </p>
                     </div>
-                    <div>
-                        <p>@item.CommentsCount Comments</p>
+
+                    <div class="card-footer bg-transparent border-0">
+                        <p class="text-muted mb-0">@item.CommentsCount Comments</p>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
-

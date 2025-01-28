@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasketballForum.Migrations
 {
     [DbContext(typeof(BasketballForumContext))]
-    [Migration("20250125143502_AddCommentCountToDiscussion")]
-    partial class AddCommentCountToDiscussion
+    [Migration("20250128011339_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,6 +69,7 @@ namespace BasketballForum.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageFilename")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")

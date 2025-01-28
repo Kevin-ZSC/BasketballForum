@@ -40,24 +40,6 @@ namespace BasketballForum.Controllers
             return View(discussion);
 		}
 
-		// GET: Discussions/Details/5
-		public async Task<IActionResult> Details(int? id)
-		{
-			if (id == null)
-			{
-				return NotFound();
-			}
-
-			var discussion = await _context.Discussion.Include(d => d.Comments)
-                .FirstOrDefaultAsync(m => m.DiscussionId == id);
-			if (discussion == null)
-			{
-				return NotFound();
-			}
-
-			return View(discussion);
-		}
-
 		// GET: Discussions/Create
 		public IActionResult Create()
 		{
@@ -69,36 +51,29 @@ namespace BasketballForum.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(IFormFile ImageFile, [Bind("DiscussionId,Title,Content,ImageFilename,CreateDate")] Discussion discussion)
+        public async Task<IActionResult> Create([Bind("DiscussionId,Title,Content,ImageFile,CreateDate")] Discussion discussion)
         {
 
             if (ModelState.IsValid)
             {
-                if (ImageFile != null && ImageFile.Length > 0)
-                {
-                    var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
-                    var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", uniqueFileName);
+                // rename the uploaded file to a guid (unique filename). Set before photo saved in database.
+                discussion.ImageFilename = Guid.NewGuid().ToString() + Path.GetExtension(discussion.ImageFile?.FileName);
 
-                    if (!Directory.Exists(Path.GetDirectoryName(filePath)))
-                    {
-                        _ = Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-                    }
+                if (discussion.ImageFile != null)
+                {
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", discussion.ImageFilename);
 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        await ImageFile.CopyToAsync(fileStream);
+                        await discussion.ImageFile.CopyToAsync(fileStream);
                     }
-
-                    discussion.ImageFilename = uniqueFileName;
-                } else
-				{
-					discussion.ImageFilename = null;
                 }
 
-                _context.Add(discussion);
+                _context.Update(discussion);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Details", "Discussions", new { id = discussion.DiscussionId });
+                return RedirectToAction("GetDiscussion", "Discussions", new { id = discussion.DiscussionId });
+
             }
 
             return View(discussion);
@@ -126,58 +101,56 @@ namespace BasketballForum.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost("Discussions/Edit/{id}")]  //add the route parameter to the post method in case of AmbiguousMatchException
         [ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id,IFormFile ImageFile, [Bind("DiscussionId,Title,Content,ImageFilename,CreateDate")] Discussion discussion)
-		{
-			if (id != discussion.DiscussionId)
-			{
-				return NotFound();
-			}
+        public async Task<IActionResult> Edit(int id, [Bind("DiscussionId,Title,Content,ImageFile,CreateDate,ImageFilename")] Discussion discussion)
+        {
+            if (id != discussion.DiscussionId)
+            {
+                return NotFound();
+            }
 
-			if (ModelState.IsValid)
-			{
-				try
-				{
-                    if (ImageFile != null && ImageFile.Length > 0)
+            if (ModelState.IsValid)
+            {
+                // Retrieve the existing discussion from the database
+                var existingDiscussion = await _context.Discussion
+                    .Include(d => d.Comments) 
+                    .FirstOrDefaultAsync(d => d.DiscussionId == id);
+
+                if (existingDiscussion == null)
+                {
+                    return NotFound();
+                }
+
+                // Update editable properties
+                existingDiscussion.Title = discussion.Title;
+                existingDiscussion.Content = discussion.Content;
+
+                // Handle image upload logic
+                if (discussion.ImageFile != null)
+                {
+                    // Generate a new filename and save the file
+                    existingDiscussion.ImageFilename = Guid.NewGuid().ToString() + Path.GetExtension(discussion.ImageFile.FileName);
+
+                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", existingDiscussion.ImageFilename);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                     
-                        var uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
-
-                        var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", uniqueFileName);
-
-                        if (!Directory.Exists(Path.GetDirectoryName(filePath)))
-                        {
-                            _ = Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-                        }
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await ImageFile.CopyToAsync(fileStream);
-                        }
-
-                        discussion.ImageFilename = uniqueFileName;
+                        await discussion.ImageFile.CopyToAsync(fileStream);
                     }
+                }
 
-                    _context.Update(discussion);
-					await _context.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!DiscussionExists(discussion.DiscussionId))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
-				return RedirectToAction("Details", "Discussions", new { id = discussion.DiscussionId });
-			}
-			return View(discussion);
-		}
+                // Save changes to the database
+                _context.Update(existingDiscussion);
+                await _context.SaveChangesAsync();
 
-		// GET: Discussions/Delete/5
-		public async Task<IActionResult> Delete(int? id)
+                return RedirectToAction("GetDiscussion", "Discussions", new { id = existingDiscussion.DiscussionId });
+            }
+
+            return View(discussion);
+        }
+
+
+        // GET: Discussions/Delete/5
+        public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null)
 			{
@@ -207,11 +180,6 @@ namespace BasketballForum.Controllers
 
 			await _context.SaveChangesAsync();
 			return RedirectToAction("Index","Home");
-		}
-
-		private bool DiscussionExists(int id)
-		{
-			return _context.Discussion.Any(e => e.DiscussionId == id);
 		}
 	}
 }

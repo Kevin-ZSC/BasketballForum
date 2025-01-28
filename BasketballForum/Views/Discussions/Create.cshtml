@@ -4,45 +4,62 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="card shadow-lg p-4">
+        <h1 class="text-center mb-4">New Discussion Form</h1>
 
-<h4>Discussion</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label for="ImageFile">Upload Image</label>
-                <input id="ImageFile" name="ImageFile" type="file" />
-                @* <span asp-validation-for="ImageFile" class="text-danger"></span> *@
-            </div>
+        <hr />
 
-            <div class="form-group">
-                <label asp-for="CreateDate" class="control-label"></label>
-                <input asp-for="CreateDate" class="form-control" />
-                <span asp-validation-for="CreateDate" class="text-danger"></span>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <!-- Title Input -->
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Discussion Title</label>
+                        <input asp-for="Title" class="form-control" placeholder="Enter the title of your discussion" />
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+
+                    <!-- Content Input -->
+                    <div class="mb-3">
+                        <label asp-for="Content" class="form-label">Discussion Content</label>
+                        <textarea asp-for="Content" class="form-control" rows="4" placeholder="Write your discussion here..."></textarea>
+                        <span asp-validation-for="Content" class="text-danger"></span>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-3">
+                        <label for="ImageFile" class="form-label">Upload Image</label>
+                        <input id="ImageFile" name="ImageFile" type="file" class="form-control" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <!-- Create Date -->
+                    <div class="mb-3">
+                        <label asp-for="CreateDate" class="form-label">Create Date</label>
+                        <input asp-for="CreateDate" class="form-control" />
+                        <span asp-validation-for="CreateDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="mb-3">
+                        <input type="submit" value="Create Discussion" class="btn btn-primary w-100" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
+        <!-- Back to List Button -->
+        <div class="text-center mt-4">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Back to List</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index" asp-controller="Home" >Back to List</a>
-</div>
- @section Scripts { 
-     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
- } 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

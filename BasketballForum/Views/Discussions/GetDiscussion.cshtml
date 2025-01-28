@@ -5,43 +5,64 @@
 }
 
 <div class="container mt-5">
-    <div class="text-center">
-        <h1 class="display-4">@Model.Title</h1>
-        <p class="text-muted"><strong>Created On:</strong> @Model.CreateDate.ToString("MMMM dd, yyyy")</p>
-    </div>
+    <!-- Main Post Container -->
+    <div class="mx-auto p-4 shadow rounded" style="max-width: 900px; background-color: #ffffff;">
+        <!-- Title Section -->
+        <div class="text-center mb-4">
+            <h1 class="display-4 text-primary">@Model.Title</h1>
+            <p class="text-muted"><strong>Created On:</strong> @Model.CreateDate.ToString("MMMM dd, yyyy")</p>
+        </div>
 
-    <hr class="my-4" />
+        <!-- Image Section -->
+        @if (!string.IsNullOrEmpty(Model.ImageFilename))
+        {
+            <div class="text-center mb-4">
+                <img src="@Url.Content("/images/" + Model.ImageFilename)" alt="@Model.ImageFilename" class="img-fluid rounded shadow" style="max-width: 100%; height: auto;" />
+            </div>
+        }
 
-    <div class="mb-4">
-        <h2>Comments</h2>
-        <div class="d-flex justify-content-between">
+        <!-- Content Section -->
+        <div class="blog-content mb-5">
+            <p class="lead">@Model.Content</p>
+        </div>
+
+        <hr />
+
+        <h2 class="mb-3">Comments</h2>
+        <div class="d-flex justify-content-between mb-3">
             <a asp-action="Create" asp-controller="Comments" asp-route-DiscussionId="@Model?.DiscussionId" class="btn btn-primary">
-                <i class="bi bi-chat-right-text"></i> Add Comment
-            </a>
-            <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Back to List
+                Add Comment
             </a>
         </div>
 
+        <!-- Comments List -->
         @if (Model.Comments != null && Model.Comments.Any())
         {
             <ul class="list-group">
                 @foreach (var comment in Model.Comments)
                 {
                     <li class="list-group-item">
-                        <p>@comment.Content</p>
+                        <p class="mb-1">@comment.Content</p>
                         <small class="text-muted">Posted on @comment.CreateDate.ToString("MMMM dd, yyyy h:mm tt")</small>
                     </li>
                 }
             </ul>
         }
-        else
-        {
-            <p class="text-warning">No comments yet. Be the first to comment!</p>
-        }
+        <hr />
+
+        <div class="d-flex justify-content-end row-gap-2">
+
+            <a asp-action="Edit" asp-route-id="@Model?.DiscussionId" class="btn btn-warning ms-2">
+                Edit
+            </a>
+            <form asp-action="Delete" asp-controller="Discussions" method="post" class="d-inline">
+                <input type="hidden" name="id" value="@Model?.DiscussionId" />
+                <button type="submit" class="btn btn-danger ms-2">Delete</button>
+            </form>
+            <a asp-action="Index" asp-controller="Home" class="btn btn-secondary ms-2">
+                Back to Home
+            </a>
+        </div>
     </div>
-
-    <hr class="my-4" />
-
-    
+   
 </div>

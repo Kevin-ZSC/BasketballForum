@@ -66,6 +66,7 @@ namespace BasketballForum.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageFilename")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")

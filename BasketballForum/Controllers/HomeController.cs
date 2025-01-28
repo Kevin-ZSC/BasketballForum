@@ -2,6 +2,7 @@ using System.Diagnostics;
 using BasketballForum.Data;
 using BasketballForum.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BasketballForum.Controllers
 {
@@ -22,7 +23,7 @@ namespace BasketballForum.Controllers
 
         public IEnumerable<Discussion> GetDiscussion()
         {
-            return _context.Discussion.ToList();
+            return _context.Discussion.Include(d => d.Comments).ToList();
         }
 
         public IActionResult Privacy()
