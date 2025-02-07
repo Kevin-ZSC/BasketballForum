@@ -29,7 +29,7 @@ namespace BasketballForum.Controllers
         public IActionResult GetDiscussion(int id)
         {
             var discussion = _context.Discussion
-                                     .Include(d => d.Comments)
+                                     .Include(d => d.Comments.OrderByDescending(c => c.CreateDate))
                                      .FirstOrDefault(d => d.DiscussionId == id);
 
             if (discussion == null)
