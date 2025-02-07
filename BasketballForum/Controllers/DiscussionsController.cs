@@ -72,7 +72,7 @@ namespace BasketballForum.Controllers
                 _context.Update(discussion);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("GetDiscussion", "Discussions", new { id = discussion.DiscussionId });
+                return RedirectToAction("GetDiscussion", "Home", new { id = discussion.DiscussionId });
 
             }
 
@@ -142,7 +142,7 @@ namespace BasketballForum.Controllers
                 _context.Update(existingDiscussion);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("GetDiscussion", "Discussions", new { id = existingDiscussion.DiscussionId });
+                return RedirectToAction("GetDiscussion", "Home", new { id = existingDiscussion.DiscussionId });
             }
 
             return View(discussion);

@@ -17,15 +17,28 @@ namespace BasketballForum.Controllers
 
         public IActionResult Index()
         {
-            var discussions = GetDiscussion().OrderByDescending(c => c.CreateDate).ToList();
+            var discussions = GetDiscussions().OrderByDescending(c => c.CreateDate).ToList();
             return View(discussions);
         }
 
-        public IEnumerable<Discussion> GetDiscussion()
+        public IEnumerable<Discussion> GetDiscussions()
         {
             return _context.Discussion.Include(d => d.Comments).ToList();
         }
 
+        public IActionResult GetDiscussion(int id)
+        {
+            var discussion = _context.Discussion
+                                     .Include(d => d.Comments)
+                                     .FirstOrDefault(d => d.DiscussionId == id);
+
+            if (discussion == null)
+            {
+                return NotFound(); // Handle the case where the discussion is not found
+            }
+
+            return View("~/Views/Home/GetDiscussion.cshtml", discussion);
+        }
         public IActionResult Privacy()
         {
             return View();

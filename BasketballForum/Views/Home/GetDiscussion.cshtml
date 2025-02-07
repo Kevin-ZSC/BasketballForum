@@ -53,7 +53,7 @@
 
         <div class="d-flex justify-content-end row-gap-2">
 
-            <a asp-action="Edit" asp-route-id="@Model?.DiscussionId" class="btn btn-warning ms-2">
+            <a asp-action="Edit" asp-controller="Discussions" asp-route-id="@Model?.DiscussionId" class="btn btn-warning ms-2">
                 Edit
             </a>
             <form asp-action="Delete" asp-controller="Discussions" method="post" class="d-inline">

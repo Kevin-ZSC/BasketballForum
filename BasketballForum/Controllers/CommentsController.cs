@@ -55,7 +55,7 @@ namespace BasketballForum.Controllers
                     _context.Discussion.Update(discussion);
                 }
                 await _context.SaveChangesAsync();
-				return RedirectToAction("GetDiscussion", "Discussions", new { id = comment.DiscussionId });
+				return RedirectToAction("GetDiscussion", "Home", new { id = comment.DiscussionId });
 			}
 			return View(comment);
 		}
