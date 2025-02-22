@@ -19,7 +19,7 @@
             <div class="text-center mb-4">
                 <img src="@Url.Content("/images/" + Model.ImageFilename)" alt="" class="img-fluid rounded shadow" style="max-width: 100%; height: auto;" />
             </div>
-        } 
+        }
 
         <!-- Content Section -->
         <div class="blog-content mb-5">
@@ -33,7 +33,7 @@
             <a asp-action="Create" asp-controller="Comments" asp-route-DiscussionId="@Model?.DiscussionId" class="btn btn-primary">
                 Add Comment
             </a>
-           
+
         </div>
 
         <!-- Comments List -->
@@ -52,10 +52,15 @@
         <hr />
 
         <div class="d-flex justify-content-end row-gap-2">
-            <a asp-action="Index" asp-controller="Home" class="btn btn-secondary ms-2">
-                Back to Home
+
+            <a asp-action="Edit" asp-controller="Discussions" asp-route-id="@Model?.DiscussionId" class="btn btn-warning ms-2">
+                Edit
+            </a>
+            <a asp-action="Index" asp-controller="Discussions" class="btn btn-secondary ms-2">
+                Back to Discussions
             </a>
         </div>
     </div>
-   
+
 </div>
+

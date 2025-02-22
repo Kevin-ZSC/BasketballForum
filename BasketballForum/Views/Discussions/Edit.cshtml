@@ -1,49 +1,65 @@
 ﻿@model BasketballForum.Models.Discussion
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Discussion";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center mb-0">Edit Discussion</h3>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        <input type="hidden" asp-for="DiscussionId" />
 
-<h4>Discussion</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="DiscussionId" />
-            <div class="mb-3">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label fw-bold">Title</label>
+                            <input asp-for="Title" class="form-control" placeholder="Enter title..." />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label fw-bold">Content</label>
+                            <textarea asp-for="Content" class="form-control" rows="4" placeholder="Write your discussion content..."></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ImageFile" class="form-label fw-bold">Upload New Image</label>
+                            <input type="file" id="ImageFile" name="ImageFile" class="form-control" />
+                            <span asp-validation-for="ImageFile" class="text-danger"></span>
+
+                            @if (!string.IsNullOrEmpty(Model.ImageFilename))
+                            {
+                                <div class="mt-2">
+                                    <p class="small text-muted">Current Image:</p>
+                                    <img src="~/images/@Model.ImageFilename" class="img-thumbnail" style="max-width: 200px;" alt="Current Image" />
+                                </div>
+                            }
+                        </div>
+
+                        @* <div class="mb-3"> *@
+                        @*     <label asp-for="CreateDate" class="form-label fw-bold">Create Date</label> *@
+                        @*     <input asp-for="CreateDate" class="form-control" readonly /> *@
+                        @* </div> *@
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success fw-bold">Save Changes</button>
+                            <a asp-action="Index" asp-controller="Discussions" class="btn btn-secondary">Back to Discussions</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="mb-3">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label for="ImageFile">Upload New Image (Leave blank to keep current image)</label>
-                <input type="file" id="ImageFile" name="ImageFile" class="form-control" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label asp-for="CreateDate" class="control-label"></label>
-                <input asp-for="CreateDate" class="form-control" />
-                <span asp-validation-for="CreateDate" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index" asp-controller="Home" >Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

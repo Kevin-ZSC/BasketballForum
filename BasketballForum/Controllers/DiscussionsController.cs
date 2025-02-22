@@ -24,7 +24,10 @@ namespace BasketballForum.Controllers
 		// GET: Discussions
 		public async Task<IActionResult> Index()
 		{
-			return View(await _context.Discussion.ToListAsync());
+            var discussions = await _context.Discussion
+            .OrderByDescending(d => d.CreateDate) 
+            .ToListAsync();
+            return View(discussions);
 		}
 
 		public async Task<IActionResult> GetDiscussion(int id)
@@ -68,8 +71,12 @@ namespace BasketballForum.Controllers
                         await discussion.ImageFile.CopyToAsync(fileStream);
                     }
                 }
+                else
+                {
+                    discussion.ImageFilename = ""; 
+                }
 
-                _context.Update(discussion);
+                _context.Add(discussion);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction("GetDiscussion", "Home", new { id = discussion.DiscussionId });
@@ -123,7 +130,7 @@ namespace BasketballForum.Controllers
                 // Update editable properties
                 existingDiscussion.Title = discussion.Title;
                 existingDiscussion.Content = discussion.Content;
-
+                
                 // Handle image upload logic
                 if (discussion.ImageFile != null)
                 {
@@ -148,6 +155,54 @@ namespace BasketballForum.Controllers
             return View(discussion);
         }
 
+      
+        //GET: Discussions/Detail/5
+
+        public async Task<IActionResult> Detail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var discussion = await _context.Discussion
+                .FirstOrDefaultAsync(m => m.DiscussionId == id);
+            if (discussion == null)
+            {
+                return NotFound();
+            }
+            return View(discussion);
+        }
+
+        //POST: Discussions/Detail/5
+        [HttpPost]
+        public async Task<IActionResult> Detail(int id, [Bind("DiscussionId,Title,Content,ImageFilename,CreateDate")] Discussion discussion)
+        {
+            if (id != discussion.DiscussionId)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(discussion);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DiscussionExists(discussion.DiscussionId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(discussion);
+        }
 
         // GET: Discussions/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -181,5 +236,10 @@ namespace BasketballForum.Controllers
 			await _context.SaveChangesAsync();
 			return RedirectToAction("Index","Home");
 		}
-	}
+
+        private bool DiscussionExists(int discussionId)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
