@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BasketballForum.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BasketballForum.Data
 {
-    public class BasketballForumContext : DbContext
+    public class BasketballForumContext : IdentityDbContext
     {
         public BasketballForumContext (DbContextOptions<BasketballForumContext> options)
             : base(options)

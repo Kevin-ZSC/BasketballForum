@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using BasketballForum.Data;
+using Microsoft.AspNetCore.Identity;
 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BasketballForumContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BasketballForumContext") ?? throw new InvalidOperationException("Connection string 'BasketballForumContext' not found.")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<BasketballForumContext>();
 
 
 // Add services to the container.
@@ -33,5 +36,5 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-
+app.MapRazorPages().WithStaticAssets();
 app.Run();

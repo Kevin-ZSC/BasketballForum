@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BasketballForum.Migrations
 {
     [DbContext(typeof(BasketballForumContext))]
-    [Migration("20250201010305_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250223042626_modifyDiscussionView")]
+    partial class modifyDiscussionView
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
