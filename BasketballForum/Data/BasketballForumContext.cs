@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace BasketballForum.Data
 {
-    public class BasketballForumContext : IdentityDbContext
+    public class BasketballForumContext : IdentityDbContext<ApplicationUser>
     {
         public BasketballForumContext (DbContextOptions<BasketballForumContext> options)
             : base(options)

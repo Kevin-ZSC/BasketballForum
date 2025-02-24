@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BasketballForumContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BasketballForumContext") ?? throw new InvalidOperationException("Connection string 'BasketballForumContext' not found.")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<BasketballForumContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<BasketballForumContext>();
 
 
 // Add services to the container.
