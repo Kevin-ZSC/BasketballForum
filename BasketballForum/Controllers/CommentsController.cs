@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BasketballForum.Data;
 using BasketballForum.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BasketballForum.Controllers
 {
+    [Authorize]
 	public class CommentsController : Controller
 	{
 		private readonly BasketballForumContext _context;

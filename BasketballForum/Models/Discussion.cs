@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using BasketballForum.Data;
 
 namespace BasketballForum.Models
 {
@@ -16,5 +17,10 @@ namespace BasketballForum.Models
 
         public int CommentsCount { get; set; }
         public ICollection<Comment>? Comments { get; set; }
+
+        // Foreign key (AspNetUsers table)
+        public string ApplicationUserId { get; set; } = string.Empty;
+        // Navigation property
+        public ApplicationUser? ApplicationUser { get; set; }
     }
 }

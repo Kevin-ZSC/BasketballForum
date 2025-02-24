@@ -75,6 +75,22 @@ namespace BasketballForum.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            /// 
+
+            [Required]
+            
+            [Display(Name = "Name")]
+            public string Name { get; set; }
+
+            
+            [Display(Name = "Location")]
+            public string Location { get; set; }
+
+            [Display(Name = "Profile Picture")]
+            public IFormFile? ImageFile { get; set; }
+
+
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -114,6 +130,35 @@ namespace BasketballForum.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
+                user.Name = Input.Name;
+                user.Location = Input.Location;
+
+
+                if (Input.ImageFile != null)
+                {
+                    // Generate a unique filename
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Input.ImageFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+
+                    
+                    // Save file to the server
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await Input.ImageFile.CopyToAsync(stream);
+                        }
+
+                        user.ImageFilename = fileName;
+                        _logger.LogInformation($"Image filename set to: {user.ImageFilename}");
+                    
+                }
+                else
+                {
+                    user.ImageFilename = "default-profile.png"; // Default image
+                    _logger.LogInformation("No image uploaded, using default.");
+                }
+
+
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

@@ -8,18 +8,23 @@ using Microsoft.EntityFrameworkCore;
 using BasketballForum.Data;
 using BasketballForum.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace BasketballForum.Controllers
 {
+    [Authorize]
 	public class DiscussionsController : Controller
 	{
 		private readonly BasketballForumContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        public DiscussionsController(BasketballForumContext context, IWebHostEnvironment hostingEnvironment)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public DiscussionsController(BasketballForumContext context, IWebHostEnvironment hostingEnvironment, UserManager<ApplicationUser> userManager)
 		{
 			_context = context;
 			_hostingEnvironment = hostingEnvironment;
-		}
+            _userManager = userManager;
+        }
 
 		// GET: Discussions
 		public async Task<IActionResult> Index()
@@ -53,13 +58,22 @@ namespace BasketballForum.Controllers
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
-		[ValidateAntiForgeryToken]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DiscussionId,Title,Content,ImageFile,CreateDate")] Discussion discussion)
         {
 
             if (ModelState.IsValid)
             {
-                // rename the uploaded file to a guid (unique filename). Set before photo saved in database.
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return Unauthorized(); 
+                }
+
+                discussion.ApplicationUserId = user.Id;
+                
                 discussion.ImageFilename = Guid.NewGuid().ToString() + Path.GetExtension(discussion.ImageFile?.FileName);
 
                 if (discussion.ImageFile != null)
@@ -73,7 +87,7 @@ namespace BasketballForum.Controllers
                 }
                 else
                 {
-                    discussion.ImageFilename = ""; 
+                    discussion.ImageFilename = " "; 
                 }
 
                 _context.Add(discussion);

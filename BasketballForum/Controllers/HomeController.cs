@@ -23,12 +23,16 @@ namespace BasketballForum.Controllers
 
         public IEnumerable<Discussion> GetDiscussions()
         {
-            return _context.Discussion.Include(d => d.Comments).ToList();
+            return _context.Discussion
+                .Include(d => d.ApplicationUser)
+                .Include(d => d.Comments)
+                .ToList();
         }
 
         public IActionResult GetDiscussion(int id)
         {
             var discussion = _context.Discussion
+                                     .Include(d => d.ApplicationUser)
                                      .Include(d => d.Comments.OrderByDescending(c => c.CreateDate))
                                      .FirstOrDefault(d => d.DiscussionId == id);
 

@@ -17,7 +17,6 @@ namespace BasketballForum.Data
         [PersonalData]
         public string ImageFilename { get; set; } = string.Empty;
 
-        [PersonalData]
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
     }
