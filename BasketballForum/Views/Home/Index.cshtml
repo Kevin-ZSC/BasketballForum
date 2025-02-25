@@ -23,14 +23,25 @@
                                 <a asp-action="GetDiscussion" asp-controller="Home" asp-route-id="@item.DiscussionId" class="text-decoration-none text-primary">
                                     @item.Title
                                 </a>
-                   
+
                             </h5>
-                            <p class="text-muted small mb-2">
-                                <i class="fa-regular fa-user"></i> <a asp-action="" asp-controller="">@item.ApplicationUser.Name</a>
-                                &bull; <i class="fa-regular fa-calendar"></i> @item.CreateDate.ToString("MMMM dd, yyyy")
-                            </p>
-                            <div class="card-footer bg-transparent border-0 p-0 d-flex">
-                                <p class="text-muted">@item.CommentsCount <i class="fa-regular fa-comment"></i></p>
+                            <div class="d-flex gap-2 align-items-center mb-2">
+
+                                @if (!string.IsNullOrEmpty(item.ApplicationUser.ImageFilename))
+                                {
+                                    <img src="~/images/@item.ApplicationUser.ImageFilename" alt="User Image"
+                                    class="rounded-circle border border-2 shadow-sm" width="40" height="40"
+                                    style="object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <i class="fa-regular fa-user"></i>
+                                }
+                                <a asp-action="Profile" asp-controller="Home" asp-route-id="@item.ApplicationUser.Id" class="text-decoration-none fw-bold text-dark fs-6">@item.ApplicationUser.Name</a>
+                                <small class="text-muted">@item.CreateDate.ToString("MMMM dd, yyyy")</small>
+                            </div>
+                            <div class="card-footer bg-transparent border-0 p-0 d-flex align-items-center">
+                                <small class="text-muted"><i class="fa-regular fa-comment"></i> @item.CommentsCount comments</small>
                             </div>
                            
                         </div>

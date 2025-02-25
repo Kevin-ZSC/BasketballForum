@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using BasketballForum.Data;
 using BasketballForum.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +10,12 @@ namespace BasketballForum.Controllers
     public class HomeController : Controller
     {
         private readonly BasketballForumContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(BasketballForumContext context)
+        public HomeController(BasketballForumContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -20,6 +23,35 @@ namespace BasketballForum.Controllers
             var discussions = GetDiscussions().OrderByDescending(c => c.CreateDate).ToList();
             return View(discussions);
         }
+
+
+        public async Task<IActionResult> Profile(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return BadRequest("User ID is required.");
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound(); 
+            }
+
+            var discussions = _context.Discussion
+                                      .Where(d => d.ApplicationUserId == user.Id)
+                                      .Include(d => d.ApplicationUser)
+                                      .OrderByDescending(d => d.CreateDate)
+                                      .ToList();
+
+          
+            ViewData["Discussions"] = discussions; ;
+
+            return View(user); 
+        }
+
+
 
         public IEnumerable<Discussion> GetDiscussions()
         {

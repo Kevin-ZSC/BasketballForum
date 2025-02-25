@@ -1,0 +1,76 @@
+﻿@model BasketballForum.Data.ApplicationUser
+
+@{
+    ViewData["Title"] = "Profile";
+    var discussions = ViewData["Discussions"] as List<BasketballForum.Models.Discussion>;
+}
+
+<div class="container mt-4">
+    <div class="row">
+   
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    @if (Model.ImageFilename != null)
+                    {
+                        <img src="@Url.Content("/images/" + Model.ImageFilename)" alt="Profile Picture"
+                             class="rounded-circle border mb-3" width="150" height="150"
+                             style="object-fit: cover;">
+                    }
+                    else
+                    {
+                        <div class="rounded-circle border d-flex align-items-center justify-content-center mb-3"
+                             style="width: 150px; height: 150px; background-color: #f0f2f5; margin: 0 auto;">
+                            <i class="fa-regular fa-user fa-4x text-muted"></i>
+                        </div>
+                    }
+
+                    <h2>@Model.Name</h2>
+                    <p class="text-muted"><i class="fa-solid fa-location-dot"></i> @Model.Location</p>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="col-md-8">
+            <h3>Discussions</h3>
+            @if (discussions != null && discussions.Any())
+            {
+                <div class="list-group">
+                    @foreach (var item in discussions)
+                    {
+                        <a asp-action="GetDiscussion" asp-controller="Home" asp-route-id="@item.DiscussionId"
+                           class="list-group-item list-group-item-action">
+                            <div class="row">
+                        
+                                <div class="col-8">
+                                    <div class="d-flex flex-column">
+                                        <h5 class="mb-2">@item.Title</h5>
+                                        <div class="d-flex gap-2 align-items-center mb-2">
+                                            <i class="fa-regular fa-user"></i>
+                                            <p class="mb-1">@item.ApplicationUser.Name</p>
+                                            <small class="text-muted">@item.CreateDate.ToString("MMMM dd, yyyy")</small>
+                                        </div>
+                                        <small class="text-muted"><i class="fa-regular fa-comment"></i> @item.CommentsCount comments</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-4 d-flex justify-content-center align-items-center">
+                                    @if (!string.IsNullOrEmpty(item.ImageFilename))
+                                    {
+                                        <img src="@Url.Content("/images/" + item.ImageFilename)" alt="Discussion Image"
+                                             class="img-fluid rounded" style="max-height: 100px; object-fit: cover;">
+                                    }
+                                </div>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No discussion threads found.</p>
+            }
+        </div>
+    </div>
+</div>

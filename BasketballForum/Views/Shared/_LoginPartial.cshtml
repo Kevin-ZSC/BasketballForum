@@ -5,24 +5,81 @@
 @inject UserManager<ApplicationUser> UserManager
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var user = await UserManager.GetUserAsync(User);
+
+
+        <li class="nav-item dropdown d-none d-lg-block">
+            <a id="profile-dropdown" class="nav-link text-dark" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">
+                @if (!string.IsNullOrEmpty(user.ImageFilename))
+                {
+                    <img src="~/images/@user.ImageFilename" alt="User Image"
+                         class="rounded-circle shadow-sm" width="40" height="40"
+                         style="object-fit: cover; cursor: pointer;" />
+                }
+                else
+                {
+                    <div class="rounded-circle border d-flex align-items-center justify-content-center"
+                         style="width: 40px; height: 40px; background-color: #f0f2f5; cursor: pointer;">
+                        <i class="fa-regular fa-user fa-lg text-muted"></i>
+                    </div>
+                }
+            </a>
+     
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profile-dropdown">
+                <li>
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
+                </li>
+                <li>
+                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button id="logout" type="submit" class="dropdown-item btn btn-link text-dark border-0" style="text-align: left;">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+
+       
+        <li class="nav-item d-lg-none">
+            <div class="dropdown">
+                <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    @if (!string.IsNullOrEmpty(user.ImageFilename))
+                    {
+                        <img src="~/images/@user.ImageFilename" alt="User Image"
+                             class="rounded-circle shadow-sm me-2" width="40" height="40"
+                             style="object-fit: cover; cursor: pointer;" />
+                    }
+                    else
+                    {
+                        <div class="rounded-circle border d-flex align-items-center justify-content-center me-2"
+                             style="width: 40px; height: 40px; background-color: #f0f2f5; cursor: pointer;">
+                            <i class="fa-regular fa-user fa-lg text-muted"></i>
+                        </div>
+                    }
+                    <span>@UserManager.GetUserName(User)</span>
+                </a>
+            
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
+                    </li>
+                    <li>
+                        <form id="logoutFormMobile" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button id="logoutMobile" type="submit" class="dropdown-item btn btn-link text-dark border-0" style="text-align: left;">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    }
+    else
+    {
+        
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+    }
 </ul>
