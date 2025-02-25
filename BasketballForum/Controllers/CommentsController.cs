@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BasketballForum.Data;
 using BasketballForum.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace BasketballForum.Controllers
 {
@@ -15,14 +16,17 @@ namespace BasketballForum.Controllers
 	public class CommentsController : Controller
 	{
 		private readonly BasketballForumContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-		public CommentsController(BasketballForumContext context)
+        public CommentsController(BasketballForumContext context, UserManager<ApplicationUser> userManager)
 		{
 			_context = context;
+            _userManager = userManager;
 		}
         // GET: Comments/Create
         public IActionResult Create(int DiscussionId)
         {
+          
             var discussion = _context.Discussion.FirstOrDefault(d => d.DiscussionId == DiscussionId);
 
             if (discussion == null)
@@ -48,7 +52,14 @@ namespace BasketballForum.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				comment.CreateDate = DateTime.Now;
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null) {
+                    return Unauthorized();
+                }
+
+                comment.ApplicationUserId = user.Id;
+
+                comment.CreateDate = DateTime.Now;
 				_context.Add(comment);
                 var discussion = await _context.Discussion.FindAsync(comment.DiscussionId);
                 if (discussion != null)

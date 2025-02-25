@@ -29,7 +29,14 @@ namespace BasketballForum.Controllers
 		// GET: Discussions
 		public async Task<IActionResult> Index()
 		{
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             var discussions = await _context.Discussion
+            .Where(d => d.ApplicationUserId == user.Id)
             .OrderByDescending(d => d.CreateDate) 
             .ToListAsync();
             return View(discussions);
@@ -51,7 +58,7 @@ namespace BasketballForum.Controllers
 		// GET: Discussions/Create
 		public IActionResult Create()
 		{
-			return View();
+            return View();
 		}
 
 		// POST: Discussions/Create
@@ -104,7 +111,15 @@ namespace BasketballForum.Controllers
         // GET: Discussions/Edit/5
         public async Task<IActionResult> Edit(int? id)
 		{
-			if (id == null)
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+
+            if (id == null)
 			{
 				return NotFound();
 			}
@@ -114,7 +129,12 @@ namespace BasketballForum.Controllers
 			{
 				return NotFound();
 			}
-			return View(discussion);
+
+            if (discussion.ApplicationUserId != user.Id)
+            {
+                return Forbid(); 
+            }
+            return View(discussion);
 		}
 
 		// POST: Discussions/Edit/5
@@ -122,12 +142,13 @@ namespace BasketballForum.Controllers
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost("Discussions/Edit/{id}")]  //add the route parameter to the post method in case of AmbiguousMatchException
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DiscussionId,Title,Content,ImageFile,CreateDate,ImageFilename")] Discussion discussion)
+        public async Task<IActionResult> Edit(int id, [Bind("Title,Content,ImageFile,CreateDate,ImageFilename")] Discussion discussion)
         {
-            if (id != discussion.DiscussionId)
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
             {
-                return NotFound();
-            }
+                return Unauthorized();
+            } 
 
             if (ModelState.IsValid)
             {
@@ -139,6 +160,11 @@ namespace BasketballForum.Controllers
                 if (existingDiscussion == null)
                 {
                     return NotFound();
+                }
+
+                if (existingDiscussion.ApplicationUserId != user.Id)
+                {
+                    return Forbid();
                 }
 
                 // Update editable properties
@@ -174,6 +200,12 @@ namespace BasketballForum.Controllers
 
         public async Task<IActionResult> Detail(int? id)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
             if (id == null)
             {
                 return NotFound();
@@ -183,6 +215,11 @@ namespace BasketballForum.Controllers
             if (discussion == null)
             {
                 return NotFound();
+            }
+
+            if (discussion.ApplicationUserId != user.Id)
+            {
+                return Forbid();
             }
             return View(discussion);
         }
@@ -221,7 +258,8 @@ namespace BasketballForum.Controllers
         // GET: Discussions/Delete/5
         public async Task<IActionResult> Delete(int? id)
 		{
-			if (id == null)
+            var user = await _userManager.GetUserAsync(User);
+            if (id == null)
 			{
 				return NotFound();
 			}
@@ -233,7 +271,12 @@ namespace BasketballForum.Controllers
 				return NotFound();
 			}
 
-			return View(discussion);
+            if (discussion.ApplicationUserId != user.Id)
+            {
+                return Forbid();
+            }
+
+            return View(discussion);
 		}
 
 		// POST: Discussions/Delete/5
@@ -241,13 +284,27 @@ namespace BasketballForum.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var discussion = await _context.Discussion.FindAsync(id);
-			if (discussion != null)
-			{
-				_context.Discussion.Remove(discussion);
-			}
 
-			await _context.SaveChangesAsync();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var discussion = await _context.Discussion.FindAsync(id);
+
+            if (discussion == null)
+            {
+                return NotFound();
+            }
+
+            //check if the user is the owner of the discussion
+            if (discussion.ApplicationUserId != user.Id)
+            {
+                return Forbid(); 
+            }
+            _context.Discussion.Remove(discussion);
+            await _context.SaveChangesAsync();
 			return RedirectToAction("Index","Home");
 		}
 
