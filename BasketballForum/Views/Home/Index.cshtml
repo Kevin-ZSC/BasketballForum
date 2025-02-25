@@ -19,13 +19,16 @@
                 <div class="card shadow-lg border-0 rounded-3">
                     <div class="card-body d-flex align-items-center">
                         <div class="flex-grow-1 d-flex flex-column justify-content-between">
-                            <h5 class="card-title fw-semibold">
+                            <h5 class="card-title mb-2 fw-semibold">
                                 <a asp-action="GetDiscussion" asp-controller="Home" asp-route-id="@item.DiscussionId" class="text-decoration-none text-primary">
                                     @item.Title
                                 </a>
                    
                             </h5>
-                            <p class="text-muted small">Created on: @item.CreateDate.ToString("MMMM dd, yyyy")</p>
+                            <p class="text-muted small mb-2">
+                                <i class="fa-regular fa-user"></i> <a asp-action="" asp-controller="">@item.ApplicationUser.Name</a>
+                                &bull; <i class="fa-regular fa-calendar"></i> @item.CreateDate.ToString("MMMM dd, yyyy")
+                            </p>
                             <div class="card-footer bg-transparent border-0 p-0 d-flex">
                                 <p class="text-muted">@item.CommentsCount <i class="fa-regular fa-comment"></i></p>
                             </div>

@@ -33,13 +33,15 @@ namespace BasketballForum.Controllers
         {
             var discussion = _context.Discussion
                                      .Include(d => d.ApplicationUser)
-                                     .Include(d => d.Comments.OrderByDescending(c => c.CreateDate))
+                                     .Include(d => d.Comments)
+                                     .ThenInclude(c => c.ApplicationUser)
                                      .FirstOrDefault(d => d.DiscussionId == id);
 
             if (discussion == null)
             {
-                return NotFound(); // Handle the case where the discussion is not found
+                return NotFound(); 
             }
+            discussion.Comments = discussion.Comments.OrderByDescending(c => c.CreateDate).ToList();
 
             return View("~/Views/Home/GetDiscussion.cshtml", discussion);
         }
