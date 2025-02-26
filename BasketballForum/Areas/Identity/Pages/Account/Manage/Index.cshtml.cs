@@ -7,9 +7,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using BasketballForum.Data;
+using BasketballForum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Hosting;
 
 namespace BasketballForum.Areas.Identity.Pages.Account.Manage
 {
@@ -68,15 +70,12 @@ namespace BasketballForum.Areas.Identity.Pages.Account.Manage
 
             public string ImageFilename { get; set; }
 
-            //[Phone]
-            //[Display(Name = "Phone number")]
-            //public string PhoneNumber { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser  user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
-            //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+           
 
             Username = userName;
 
@@ -85,7 +84,7 @@ namespace BasketballForum.Areas.Identity.Pages.Account.Manage
                 Name = user.Name,
                 Location = user.Location,
                 ImageFilename = user.ImageFilename,
-                //PhoneNumber = phoneNumber
+              
             };
         }
 
@@ -115,17 +114,7 @@ namespace BasketballForum.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            //var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            //if (Input.PhoneNumber != phoneNumber)
-            //{
-            //    var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-            //    if (!setPhoneResult.Succeeded)
-            //    {
-            //        StatusMessage = "Unexpected error when trying to set phone number.";
-            //        return RedirectToPage();
-            //    }
-            //}
-
+          
             if (Input.Name != user.Name)
             {
                 user.Name = Input.Name;
@@ -136,9 +125,18 @@ namespace BasketballForum.Areas.Identity.Pages.Account.Manage
                 user.Location = Input.Location;
             }
 
-            if (Input.ImageFilename != user.ImageFilename)
+            if (Input.ImageFile != null && Input.ImageFile.Length > 0)
             {
-                user.ImageFilename = Input.ImageFilename;
+                // Upload the new file and update the image filename
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Input.ImageFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await Input.ImageFile.CopyToAsync(stream);
+                }
+
+                user.ImageFilename = fileName; 
             }
 
             await _userManager.UpdateAsync(user);
