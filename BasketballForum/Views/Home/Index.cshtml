@@ -50,7 +50,7 @@
                                         <div class="d-flex align-items-center mb-2">
                                             @if (!string.IsNullOrEmpty(item.ApplicationUser.ImageFilename))
                                             {
-                                                <img src="~/images/@item.ApplicationUser.ImageFilename" alt="User Image"
+                                                <img src="@item.ApplicationUser.ImageFilename" alt="User Image"
                                                      class="rounded-circle border border-2 border-primary shadow-sm me-2" width="45" height="45"
                                                      style="object-fit: cover;" />
                                             }
@@ -96,7 +96,7 @@
                                         border-radius: 12px;
                                         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
                                                 ">
-                                        <img src="~/images/@item.ImageFilename" class="img-fluid h-100 w-100" alt="" style="object-fit: cover;" />
+                                        <img src="@item.ImageFilename" class="img-fluid h-100 w-100" alt="" style="object-fit: cover;" />
                                     </div>
                                 }
                             </div>

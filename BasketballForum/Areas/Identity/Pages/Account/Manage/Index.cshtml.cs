@@ -19,13 +19,16 @@ namespace BasketballForum.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser > _userManager;
         private readonly SignInManager<ApplicationUser > _signInManager;
+        private readonly CloudinaryService _cloudinary;
 
         public IndexModel(
+            CloudinaryService cloudinary,
             UserManager<ApplicationUser > userManager,
             SignInManager<ApplicationUser > signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _cloudinary = cloudinary;
         }
 
         /// <summary>
@@ -128,15 +131,17 @@ namespace BasketballForum.Areas.Identity.Pages.Account.Manage
             if (Input.ImageFile != null && Input.ImageFile.Length > 0)
             {
                 // Upload the new file and update the image filename
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Input.ImageFile.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
+                //var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Input.ImageFile.FileName);
+                //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await Input.ImageFile.CopyToAsync(stream);
-                }
+                //using (var stream = new FileStream(filePath, FileMode.Create))
+                //{
+                //    await Input.ImageFile.CopyToAsync(stream);
+                //}
 
-                user.ImageFilename = fileName; 
+                //user.ImageFilename = fileName; 
+                var imageUrl = await _cloudinary.UploadImageAsync(Input.ImageFile);
+                user.ImageFilename = imageUrl;
             }
 
             await _userManager.UpdateAsync(user);

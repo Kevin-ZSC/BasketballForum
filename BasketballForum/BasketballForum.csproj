@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.27.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
@@ -18,8 +19,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
   </ItemGroup>
 
-	<ItemGroup>
-		<Content Include="wwwroot\images\**\*.*" CopyToPublishDirectory="Always" />
-	</ItemGroup>
-
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+	
 </Project>

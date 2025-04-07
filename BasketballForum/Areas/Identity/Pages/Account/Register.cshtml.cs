@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using BasketballForum.Data;
+using BasketballForum.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,8 +31,10 @@ namespace BasketballForum.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser > _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly CloudinaryService _cloudinary;
 
         public RegisterModel(
+            CloudinaryService cloudinary,
             UserManager<ApplicationUser > userManager,
             IUserStore<ApplicationUser > userStore,
             SignInManager<ApplicationUser > signInManager,
@@ -44,6 +47,7 @@ namespace BasketballForum.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _cloudinary = cloudinary;
         }
 
         /// <summary>
@@ -138,23 +142,25 @@ namespace BasketballForum.Areas.Identity.Pages.Account
                 if (Input.ImageFile != null)
                 {
                     // Generate a unique filename
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Input.ImageFile.FileName);
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+                    //var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Input.ImageFile.FileName);
+                    //var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
 
-                    
-                    // Save file to the server
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await Input.ImageFile.CopyToAsync(stream);
-                        }
 
-                        user.ImageFilename = fileName;
-                        _logger.LogInformation($"Image filename set to: {user.ImageFilename}");
-                    
+                    //// Save file to the server
+                    //using (var stream = new FileStream(filePath, FileMode.Create))
+                    //    {
+                    //        await Input.ImageFile.CopyToAsync(stream);
+                    //    }
+
+                    //    user.ImageFilename = fileName;
+                    //    _logger.LogInformation($"Image filename set to: {user.ImageFilename}");
+                    var imageUrl = await _cloudinary.UploadImageAsync(Input.ImageFile);
+                    user.ImageFilename = imageUrl;
+
                 }
                 else
                 {
-                    user.ImageFilename = "default-profile.jpg"; // Default image
+                    user.ImageFilename = "";
                     _logger.LogInformation("No image uploaded, using default.");
                 }
 

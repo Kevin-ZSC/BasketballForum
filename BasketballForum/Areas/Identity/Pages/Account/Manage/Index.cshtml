@@ -33,7 +33,7 @@
 
             @if (!string.IsNullOrEmpty(Model.Input.ImageFilename))
             {
-                <img id="profileImagePreview" src="~/images/@Model.Input.ImageFilename" class="img-thumbnail" width="150" height="150" />
+                <img id="profileImagePreview" src="@Model.Input.ImageFilename" class="img-thumbnail" width="150" height="150" />
             }
 
 

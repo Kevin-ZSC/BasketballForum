@@ -24,7 +24,7 @@
                 <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
                     @if (!string.IsNullOrEmpty(Model.ApplicationUser.ImageFilename))
                     {
-                        <img src="@Url.Content("/images/" + Model.ApplicationUser.ImageFilename)" alt="User Image"
+                        <img src="@Model.ApplicationUser.ImageFilename" alt="User Image"
                              class="rounded-circle border border-primary shadow-sm" width="50" height="50"
                              style="object-fit: cover; border-width: 2px !important;">
                     }
@@ -50,7 +50,7 @@
             @if (!string.IsNullOrEmpty(Model.ImageFilename))
             {
                 <div class="text-center mb-4">
-                    <img src="@Url.Content("/images/" + Model.ImageFilename)" alt="Discussion Image"
+                    <img src="@Model.ImageFilename" alt="Discussion Image"
                          class="img-fluid rounded-3 shadow" style="max-width: 100%; max-height: 500px; object-fit: contain;" />
                 </div>
             }
@@ -89,7 +89,7 @@
                                             <div>
                                                 @if (!string.IsNullOrEmpty(comment.ApplicationUser?.ImageFilename))
                                                 {
-                                                    <img src="@Url.Content("/images/" + comment.ApplicationUser.ImageFilename)"
+                                                    <img src="@comment.ApplicationUser.ImageFilename"
                                                          alt="User Image"
                                                          class="rounded-circle border border-primary shadow-sm" width="45" height="45"
                                                          style="object-fit: cover; border-width: 2px !important;">

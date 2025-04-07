@@ -19,11 +19,13 @@ namespace BasketballForum.Controllers
 		private readonly BasketballForumContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
-        public DiscussionsController(BasketballForumContext context, IWebHostEnvironment hostingEnvironment, UserManager<ApplicationUser> userManager)
+        private readonly CloudinaryService _cloudinary;
+        public DiscussionsController(CloudinaryService cloudinary, BasketballForumContext context, IWebHostEnvironment hostingEnvironment, UserManager<ApplicationUser> userManager)
 		{
 			_context = context;
 			_hostingEnvironment = hostingEnvironment;
             _userManager = userManager;
+            _cloudinary = cloudinary;
         }
 
         public async Task<IActionResult> Index(int page = 1, int pageSize = 5)
@@ -91,12 +93,14 @@ namespace BasketballForum.Controllers
 
                 if (discussion.ImageFile != null)
                 {
-                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", discussion.ImageFilename);
+                    //string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", discussion.ImageFilename);
 
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await discussion.ImageFile.CopyToAsync(fileStream);
-                    }
+                    //using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    //{
+                    //    await discussion.ImageFile.CopyToAsync(fileStream);
+                    //}
+                    var imageUrl = await _cloudinary.UploadImageAsync(discussion.ImageFile);
+                    discussion.ImageFilename = imageUrl;
                 }
                 else
                 {
@@ -181,14 +185,16 @@ namespace BasketballForum.Controllers
                 if (discussion.ImageFile != null)
                 {
                     // Generate a new filename and save the file
-                    existingDiscussion.ImageFilename = Guid.NewGuid().ToString() + Path.GetExtension(discussion.ImageFile.FileName);
+                    //existingDiscussion.ImageFilename = Guid.NewGuid().ToString() + Path.GetExtension(discussion.ImageFile.FileName);
 
-                    string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", existingDiscussion.ImageFilename);
+                    //string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", existingDiscussion.ImageFilename);
 
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await discussion.ImageFile.CopyToAsync(fileStream);
-                    }
+                    //using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    //{
+                    //    await discussion.ImageFile.CopyToAsync(fileStream);
+                    //}
+                    var imageUrl = await _cloudinary.UploadImageAsync(discussion.ImageFile);
+                    existingDiscussion.ImageFilename = imageUrl;
                 }
 
                 // Save changes to the database
