@@ -30,3 +30,157 @@ body {
   text-align: start;
 }
 
+
+.navbar-gradient {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.navbar-brand-custom {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.nav-link-custom {
+    color: rgba(255,255,255,0.9) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+    .nav-link-custom:hover {
+        color: white !important;
+        background: rgba(255,107,53,0.2);
+        transform: translateY(-2px);
+    }
+
+.basketball-icon {
+    color: #FF6B35;
+    font-size: 1.8rem;
+    text-shadow: 0 0 8px rgba(255,255,255,0.3);
+}
+
+.navbar-toggler-custom {
+    border-color: rgba(255,255,255,0.5);
+}
+
+    .navbar-toggler-custom .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255, 255, 255, 0.8)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+
+.hover-primary:hover {
+    color: #FF6B35 !important;
+    transition: color 0.2s ease;
+}
+
+.rounded-4 {
+    border-radius: 16px !important;
+}
+
+.hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.hover-primary:hover {
+    color: #FF6B35 !important;
+    transition: color 0.2s ease;
+}
+
+.page-item.active .page-link {
+    background-color: #1e3c72;
+    border-color: #1e3c72;
+}
+
+.page-link {
+    color: #1e3c72;
+}
+
+    .page-link:hover {
+        color: #1a659e;
+    }
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 107, 53, 0.1);
+}
+
+.page-item.active .page-link {
+    background-color: #1e3c72;
+    border-color: #1e3c72;
+}
+
+.page-link {
+    color: #1e3c72;
+}
+
+    .page-link:hover {
+        color: #1a659e;
+    }
+
+.btn-outline-primary {
+    color: #1e3c72;
+    border-color: #1e3c72;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #1e3c72;
+        color: white;
+    }
+
+.text-gradient {
+    background: linear-gradient(to right, #FF6B35, #1A659E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hover-primary:hover {
+    color: #FF6B35 !important;
+}
+
+.content-box {
+    border-left: 3px solid #1e3c72;
+}
+
+.btn-outline-primary {
+    color: #1e3c72;
+    border-color: #1e3c72;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #1e3c72;
+        color: white;
+    }
+
+.text-gradient {
+    background: linear-gradient(to right, #FF6B35, #1A659E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hover-primary:hover {
+    color: #FF6B35 !important;
+}
+
+.content-box {
+    border-left: 3px solid #1e3c72;
+}
+
+.btn-outline-primary {
+    color: #1e3c72;
+    border-color: #1e3c72;
+}
+
+    .btn-outline-primary:hover {
+        background-color: #1e3c72;
+        color: white;
+    }

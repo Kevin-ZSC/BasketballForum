@@ -26,23 +26,29 @@ namespace BasketballForum.Controllers
             _userManager = userManager;
         }
 
-		// GET: Discussions
-		public async Task<IActionResult> Index()
-		{
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 5)
+        {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return Unauthorized();
+                return RedirectToAction("Login", "Account");
             }
 
-            var discussions = await _context.Discussion
-            .Where(d => d.ApplicationUserId == user.Id)
-            .OrderByDescending(d => d.CreateDate) 
-            .ToListAsync();
-            return View(discussions);
-		}
+            var query = _context.Discussion
+                .Where(d => d.ApplicationUserId == user.Id)
+                .OrderByDescending(d => d.CreateDate);
 
-		public async Task<IActionResult> GetDiscussion(int id)
+            var totalDiscussions = await query.CountAsync();
+            var discussions = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var model = new PaginatedList<Discussion>(discussions, totalDiscussions, page, pageSize);
+            return View(model);
+        }
+
+        public async Task<IActionResult> GetDiscussion(int id)
 		{
 			var discussion = await _context.Discussion.Include(d => d.Comments).FirstOrDefaultAsync(d => d.DiscussionId == id);
 
@@ -94,7 +100,7 @@ namespace BasketballForum.Controllers
                 }
                 else
                 {
-                    discussion.ImageFilename = " "; 
+                    discussion.ImageFilename = ""; 
                 }
 
                 _context.Add(discussion);
@@ -195,13 +201,12 @@ namespace BasketballForum.Controllers
             return View(discussion);
         }
 
-      
+
         //GET: Discussions/Detail/5
 
         public async Task<IActionResult> Detail(int? id)
         {
             var user = await _userManager.GetUserAsync(User);
-
             if (user == null)
             {
                 return Unauthorized();
@@ -210,8 +215,14 @@ namespace BasketballForum.Controllers
             {
                 return NotFound();
             }
+
+            // Modified to include Comments and their ApplicationUser
             var discussion = await _context.Discussion
+                .Include(d => d.ApplicationUser)  // Include discussion author
+                .Include(d => d.Comments)         // Include comments
+                    .ThenInclude(c => c.ApplicationUser) // Include comment authors
                 .FirstOrDefaultAsync(m => m.DiscussionId == id);
+
             if (discussion == null)
             {
                 return NotFound();
@@ -221,6 +232,12 @@ namespace BasketballForum.Controllers
             {
                 return Forbid();
             }
+
+            // Order comments by date (newest first)
+            discussion.Comments = discussion.Comments?
+                .OrderByDescending(c => c.CreateDate)
+                .ToList();
+
             return View(discussion);
         }
 

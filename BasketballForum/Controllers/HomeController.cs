@@ -1,4 +1,4 @@
-using System.Diagnostics;
+ using System.Diagnostics;
 using BasketballForum.Data;
 using BasketballForum.Models;
 using Microsoft.AspNetCore.Identity;
@@ -18,10 +18,19 @@ namespace BasketballForum.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int pageSize = 5)
         {
-            var discussions = GetDiscussions().OrderByDescending(c => c.CreateDate).ToList();
-            return View(discussions);
+            var totalDiscussions = _context.Discussion.Count();
+            var discussions = _context.Discussion
+                .Include(d => d.ApplicationUser)
+                .Include(d => d.Comments)  
+                .OrderByDescending(d => d.CreateDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var model = new PaginatedList<Discussion>(discussions, totalDiscussions, page, pageSize);
+            return View(model);
         }
 
 
@@ -87,5 +96,6 @@ namespace BasketballForum.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

@@ -9,63 +9,82 @@
     {
         var user = await UserManager.GetUserAsync(User);
 
-
+        <!-- Desktop Dropdown -->
         <li class="nav-item dropdown d-none d-lg-block">
-            <a id="profile-dropdown" class="nav-link text-dark" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">
-                @if (!string.IsNullOrEmpty(user.ImageFilename))
+            <a id="profile-dropdown" class="nav-link" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0;">
+                @if (user != null && !string.IsNullOrEmpty(user.ImageFilename))
                 {
                     <img src="~/images/@user.ImageFilename" alt="User Image"
-                         class="rounded-circle shadow-sm" width="40" height="40"
+                         class="rounded-circle border border-2 border-primary shadow-sm"
+                         width="40" height="40"
                          style="object-fit: cover; cursor: pointer;" />
                 }
                 else
                 {
-                    <div class="rounded-circle border d-flex align-items-center justify-content-center"
-                         style="width: 40px; height: 40px; background-color: #f0f2f5; cursor: pointer;">
-                        <i class="fa-regular fa-user fa-lg text-muted"></i>
+                    <div class="rounded-circle border border-2 border-primary d-flex align-items-center justify-content-center"
+                         style="width: 40px; height: 40px; background-color: rgba(255,255,255,0.2); cursor: pointer;">
+                        <i class="fa-regular fa-user fa-lg text-white"></i>
                     </div>
                 }
+                <span class="ms-2 text-white">@UserManager.GetUserName(User)</span>
             </a>
-     
-            <ul class="dropdown-menu dropdown-menu-end mt-3" aria-labelledby="profile-dropdown">
+
+            <ul class="dropdown-menu dropdown-menu-end mt-3 shadow-lg"
+                style="background: rgba(255,255,255,0.98); border: 1px solid #FF6B35; min-width: 200px;"
+                aria-labelledby="profile-dropdown">
                 <li>
-                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
+                    <a class="dropdown-item d-flex align-items-center py-2"
+                       asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                        <i class="fas fa-user-circle me-2 text-primary"></i> Profile
+                    </a>
                 </li>
+                <li><hr class="dropdown-divider my-1" style="border-color: #eee;"></li>
                 <li>
-                    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button id="logout" type="submit" class="dropdown-item btn btn-link text-dark border-0" style="text-align: left;">Logout</button>
+                    <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="dropdown-item d-flex align-items-center py-2 btn btn-link text-dark border-0 w-100">
+                            <i class="fas fa-sign-out-alt me-2 text-danger"></i> Logout
+                        </button>
                     </form>
                 </li>
             </ul>
         </li>
 
-       
+        <!-- Mobile Dropdown -->
         <li class="nav-item d-lg-none">
             <div class="dropdown">
-                <a class="nav-link text-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    @if (!string.IsNullOrEmpty(user.ImageFilename))
+                <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                    @if (user != null && !string.IsNullOrEmpty(user.ImageFilename))
                     {
                         <img src="~/images/@user.ImageFilename" alt="User Image"
-                             class="rounded-circle shadow-sm me-2" width="40" height="40"
-                             style="object-fit: cover; cursor: pointer;" />
+                             class="rounded-circle border border-2 border-primary shadow-sm me-2"
+                             width="40" height="40"
+                             style="object-fit: cover;" />
                     }
                     else
                     {
-                        <div class="rounded-circle border d-flex align-items-center justify-content-center me-2"
-                             style="width: 40px; height: 40px; background-color: #f0f2f5; cursor: pointer;">
-                            <i class="fa-regular fa-user fa-lg text-muted"></i>
+                        <div class="rounded-circle border border-2 border-primary d-flex align-items-center justify-content-center me-2"
+                             style="width: 40px; height: 40px; background-color: rgba(255,255,255,0.2);">
+                            <i class="fa-regular fa-user fa-lg text-white"></i>
                         </div>
                     }
-                    <span>@UserManager.GetUserName(User)</span>
+                    <span class="text-white">@UserManager.GetUserName(User)</span>
                 </a>
-            
-                <ul class="dropdown-menu">
+
+                <ul class="dropdown-menu shadow-lg" style="background: rgba(255,255,255,0.98); border: 1px solid #FF6B35;">
                     <li>
-                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a>
+                        <a class="dropdown-item d-flex align-items-center py-2"
+                           asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                            <i class="fas fa-user-circle me-2 text-primary"></i> Profile
+                        </a>
                     </li>
+                    <li><hr class="dropdown-divider my-1" style="border-color: #eee;"></li>
                     <li>
-                        <form id="logoutFormMobile" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                            <button id="logoutMobile" type="submit" class="dropdown-item btn btn-link text-dark border-0" style="text-align: left;">Logout</button>
+                        <form id="logoutFormMobile" asp-area="Identity" asp-page="/Account/Logout"
+                              asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" class="dropdown-item d-flex align-items-center py-2 btn btn-link text-dark border-0 w-100">
+                                <i class="fas fa-sign-out-alt me-2 text-danger"></i> Logout
+                            </button>
                         </form>
                     </li>
                 </ul>
@@ -74,12 +93,19 @@
     }
     else
     {
-        
         <li class="nav-item">
-            <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            <a class="nav-link text-white px-3 py-2 rounded-pill me-2"
+               style="border: 1px solid rgba(255,255,255,0.3);"
+               id="register" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fas fa-user-plus me-1"></i> Register
+            </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+            <a class="nav-link text-white px-3 py-2 rounded-pill"
+               style="background-color: rgba(255,107,53,0.8);"
+               id="login" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fas fa-sign-in-alt me-1"></i> Login
+            </a>
         </li>
     }
 </ul>

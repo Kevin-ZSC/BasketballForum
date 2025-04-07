@@ -154,7 +154,7 @@ namespace BasketballForum.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    user.ImageFilename = "default-profile.png"; // Default image
+                    user.ImageFilename = "default-profile.jpg"; // Default image
                     _logger.LogInformation("No image uploaded, using default.");
                 }
 
